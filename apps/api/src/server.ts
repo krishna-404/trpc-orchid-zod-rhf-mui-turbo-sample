@@ -1,12 +1,16 @@
-import * as express from "express";
+import express from "express";
+import { initializeTrpc } from "./trpc/router";
 
 const app = express();
-const port = 3000;
 
-app.get('/', (req, res) => {
+app.get('/', (_req, res) => {
   res.send('Welcome to my server!');
 });
 
+// trpc
+initializeTrpc(app);
+
+const port = 3000;
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });

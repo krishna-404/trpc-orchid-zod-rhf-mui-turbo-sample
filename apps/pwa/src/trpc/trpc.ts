@@ -1,0 +1,50 @@
+import { createTRPCReact, httpBatchLink, httpLink, splitLink } from "@trpc/react-query";
+import { inferRouterOutputs } from "@trpc/server";
+import type { AppRouter } from '../../../api/src/trpc/router';
+import { QueryClient } from "@tanstack/react-query";
+
+export const trpc = createTRPCReact<AppRouter>({
+  abortOnUnmount: true,
+});
+
+export type RouterOutputs = inferRouterOutputs<AppRouter>;
+
+const url = `http://localhost:3000/trpc`;
+
+// queryClient & trpc Client are placed inside a state hook in case of SSR.
+export const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: Infinity,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
+
+export const trpcClient = trpc.createClient({
+  links: [
+    // customLink,
+    splitLink({
+      condition(op) {
+        // check for context property `skipBatch`
+        return op.context.skipBatch === true;
+      },
+      // when condition is true, use normal request
+      true: httpLink({
+        fetch: (url, options) => fetch(url, {
+          ...options,
+          credentials: 'include',
+        }),
+        url,
+      }),
+      // when condition is false, use batching
+      false: httpBatchLink({
+        fetch: (url, options) => fetch(url, {
+          ...options,
+          credentials: 'include',
+        }),
+        url,
+      }),
+    }),
+  ],
+});
