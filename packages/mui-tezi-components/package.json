@@ -1,0 +1,16 @@
+{
+  "name": "@repo/mui-tezi-components",
+  "version": "1.0.0",
+  "description": "MUI Components using React Hook Form by teziapp.com",
+  "main": "index.ts",
+  "author": "Balkrishna Agarwal",
+  "license": "MIT",
+  "dependencies": {
+    "@mui/lab": "^5.0.0-alpha.151",
+    "@mui/material": "^5.14.16",
+    "@mui/x-date-pickers": "^6.18.1",
+    "@tanstack/react-query": "^5.8.4",
+    "react": "^18.2.0",
+    "react-hook-form": "^7.48.2"
+  }
+}
